@@ -116,7 +116,7 @@ class AnthropicProvider:
                 wire.append({"role": "user", "content": m["content"]})
         resp = self.client.messages.create(
             model=self.model, system=system, messages=wire, max_tokens=self.max_tokens,
-            temperature=self.temperature,
+            # temperature is not sent: current Anthropic SDKs and models do not accept it.
             tools=[{"name": t["name"], "description": t["description"], "input_schema": t["parameters"]} for t in tools])
         text = "".join(b.text for b in resp.content if b.type == "text") or None
         calls = [ToolCall(b.id, b.name, _parse_args(b.input)) for b in resp.content if b.type == "tool_use"]

@@ -51,7 +51,7 @@ class RunResult:
     run_id: str
     kind: str                  # "brief" | "nothing" | "capped"
     text: str
-    stop_reason: str           # "model_finished" | "model_said_nothing" | "max_steps" | "max_cost" | "no_tool_call"
+    stop_reason: str           # "model_finished" | "model_said_nothing" | "max_steps" | "max_cost" | "no_tool_call" | "llm_error"
     steps: int
     cost_usd: float
     input_tokens: int
@@ -88,7 +88,12 @@ def run_agent(cfg: Config, provider, toolbox: Toolbox, run_id: str, today: str |
             stop_reason, step = "max_cost", step - 1
             break
         t0 = time.time()
-        resp = provider.complete(system, history, toolbox.specs)
+        try:
+            resp = provider.complete(system, history, toolbox.specs)
+        except Exception as e:  # noqa: BLE001 - an API failure ends the run cleanly, with a log
+            log.append({"step": step, "llm_error": f"{type(e).__name__}: {e}"[:500], "calls": []})
+            stop_reason, step = "llm_error", step - 1
+            break
         tin += resp.input_tokens
         tout += resp.output_tokens
         cost += resp.input_tokens / 1e6 * p_in + resp.output_tokens / 1e6 * p_out
@@ -151,7 +156,9 @@ def failed_sources(result: RunResult) -> list[str]:
     out = []
     for e in result.log:
         for c in e["calls"]:
-            if not c["ok"] and c["tool"] in {"fetch_source", "fetch_url", "search_hackernews"}:
+            if (not c["ok"] and c["tool"] in {"fetch_source", "fetch_url", "search_hackernews"}
+                    and "no source with id" not in c["result_preview"]  # a wrong id is a model slip, not a broken source
+                    and "already failed" not in c["result_preview"]):
                 target = next(iter((c["args"] or {}).values()), "?")
                 msg = c["result_preview"].split('"error": "', 1)[-1].split('"', 1)[0]
                 out.append(f"{c['tool']} {target}: {msg}")

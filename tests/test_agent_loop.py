@@ -126,3 +126,11 @@ def test_repeating_a_failed_call_is_refused_and_failures_are_listed_by_code(cfg,
     r = run_agent(cfg, llm, make_toolbox(cfg, memory, fail={"rss"}), "r")
     assert "already failed" in r.log[1]["calls"][0]["result_preview"]
     assert failed_sources(r)[0].startswith("fetch_source news: HTTP 503")
+
+
+def test_llm_api_error_ends_run_cleanly(cfg, memory):
+    class Broken:
+        def complete(self, *a):
+            raise RuntimeError("rate limited")
+    r = run_agent(cfg, Broken(), make_toolbox(cfg, memory), "r")
+    assert r.stop_reason == "llm_error" and r.kind == "capped" and "rate limited" in r.log[0]["llm_error"]
