@@ -67,7 +67,7 @@ TERMINAL_TOOLS = {"finish", "finish_nothing"}
 
 def _norm_text(s: str) -> str:
     s = s.lower().replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')
-    s = re.sub(r"[^a-z0-9$%.,'\" ]+", " ", s)
+    s = re.sub(r"[^a-z0-9$%.,' ]+", " ", s)
     return re.sub(r"\s+", " ", s).strip()
 
 
@@ -88,6 +88,7 @@ class Toolbox:
         self.result_log: list[str] = []      # every tool result text, for the number guardrail
         self.saved: list[dict] = []
         self.finished: dict | None = None    # {"kind": "brief"|"nothing", "text": ...}
+        self._failed_calls: set[str] = set()
         self._handlers = {
             "list_sources": self.list_sources, "fetch_source": self.fetch_source,
             "search_hackernews": self.search_hackernews, "fetch_url": self.fetch_url,
@@ -102,7 +103,11 @@ class Toolbox:
     def call(self, name: str, args: dict) -> tuple[str, bool]:
         """Run one tool. Returns (result_json, ok). Never raises."""
         handler = self._handlers.get(name)
-        if handler is None:
+        key = f"{name}:{json.dumps(args, sort_keys=True, default=str)}"
+        if key in self._failed_calls:
+            out, ok = {"error": f"this exact {name} call already failed this run. Do something different, "
+                                "or move on."}, False
+        elif handler is None:
             out, ok = {"error": f"unknown tool '{name}'. Available: {sorted(self._handlers)}"}, False
         elif not isinstance(args, dict):
             out, ok = {"error": f"arguments for {name} were not valid JSON"}, False
@@ -116,6 +121,8 @@ class Toolbox:
                 out, ok = {"error": str(e)}, False
             except Exception as e:  # noqa: BLE001 - any tool failure goes back to the model
                 out, ok = {"error": f"{type(e).__name__}: {e}"}, False
+        if not ok:
+            self._failed_calls.add(key)
         text = json.dumps(out, ensure_ascii=False, default=str)
         if len(text) > self.cfg.max_result_chars:
             text = text[: self.cfg.max_result_chars] + '... [truncated; use read_item for full text]"'
@@ -205,7 +212,8 @@ class Toolbox:
             return {"error": "evidence_quote is too short; copy a full sentence or phrase from the source"}
         texts = [_norm_text((it.get("title") or "") + " " + (it.get("text") or "")) for it in self.items.values()]
         if not any(quote[:200] in t for t in texts):
-            return {"error": "evidence_quote was not found word for word in any fetched item. Copy it exactly from read_item."}
+            return {"error": "evidence_quote was not found word for word in any fetched item. Copy one short "
+                             "sentence (under 30 words) exactly as it appears in read_item, with no added words."}
         res = self.memory.save_finding(self.run_id, title, why_it_matters, list(source_urls), evidence_quote)
         if res["status"] == "new":
             self.saved.append(res)

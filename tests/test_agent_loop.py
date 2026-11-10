@@ -117,3 +117,12 @@ def test_no_tool_can_act_on_the_outside_world():
     names = {t["name"] for t in TOOL_SPECS}
     assert names == {"list_sources", "fetch_source", "search_hackernews", "fetch_url", "read_item",
                      "recall_findings", "save_finding", "finish", "finish_nothing"}
+
+
+def test_repeating_a_failed_call_is_refused_and_failures_are_listed_by_code(cfg, memory):
+    from research_agent.agent import failed_sources
+    llm = ScriptedLLM([[call("fetch_source", source_id="news")], [call("fetch_source", source_id="news")],
+                       [call("finish_nothing", reason="news feed down")]])
+    r = run_agent(cfg, llm, make_toolbox(cfg, memory, fail={"rss"}), "r")
+    assert "already failed" in r.log[1]["calls"][0]["result_preview"]
+    assert failed_sources(r)[0].startswith("fetch_source news: HTTP 503")

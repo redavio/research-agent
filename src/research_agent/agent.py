@@ -40,7 +40,8 @@ How to work:
 - If a tool returns an error, do not retry the same call more than once. Note what failed and move on.
 - You only report. You cannot post, email, buy, or change anything, and you should not suggest you did.
 - Most weeks most things do not matter. If nothing meets the bar, call finish_nothing with the reason. That is a good result, not a failure.
-- When done, call finish with a short markdown brief: what changed, why it matters to this business, what to consider doing, with source links. End with a line listing any sources that failed.
+- A web page marked "first_time" has no earlier copy to compare with, so you cannot say it changed. Only "changed" means it changed since the last run.
+- When done, call finish with a short markdown brief: what changed, why it matters to this business, what to consider doing, with source links. The list of failed sources is added for you by code.
 - Never write a number (price, percent, count, date) unless it appears in a tool result. A code check will flag any number it cannot find in what you read.
 """
 
@@ -145,6 +146,18 @@ def run_agent(cfg: Config, provider, toolbox: Toolbox, run_id: str, today: str |
                      number_check=check, saved_findings=toolbox.saved)
 
 
+def failed_sources(result: RunResult) -> list[str]:
+    """Fetches that failed, taken from the run log (code, not the model's account of it)."""
+    out = []
+    for e in result.log:
+        for c in e["calls"]:
+            if not c["ok"] and c["tool"] in {"fetch_source", "fetch_url", "search_hackernews"}:
+                target = next(iter((c["args"] or {}).values()), "?")
+                msg = c["result_preview"].split('"error": "', 1)[-1].split('"', 1)[0]
+                out.append(f"{c['tool']} {target}: {msg}")
+    return out
+
+
 def tool_order(result: RunResult) -> list[str]:
     """The sequence of tools the model chose, in order. Handy for proving the order is not fixed."""
     return [c["tool"] for e in result.log for c in e["calls"]]
@@ -155,6 +168,6 @@ def to_json(result: RunResult, cfg: Config) -> str:
         "run_id": result.run_id, "goal": cfg.goal, "provider": cfg.provider, "model": cfg.model,
         "kind": result.kind, "stop_reason": result.stop_reason, "steps": result.steps,
         "cost_usd_estimated": result.cost_usd, "input_tokens": result.input_tokens,
-        "output_tokens": result.output_tokens, "tool_order": tool_order(result),
+        "output_tokens": result.output_tokens, "tool_order": tool_order(result), "failed_sources": failed_sources(result),
         "number_check": result.number_check, "saved_findings": result.saved_findings, "steps_detail": result.log,
     }, indent=2, default=str)

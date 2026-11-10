@@ -7,7 +7,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .agent import RunResult, run_agent, to_json, tool_order
+from .agent import RunResult, failed_sources, run_agent, to_json, tool_order
 from .config import Config, ConfigError, load_config, load_dotenv
 from .llm import make_provider
 from .memory import Memory
@@ -29,6 +29,9 @@ def render_markdown(result: RunResult, cfg: Config) -> str:
             check = f"\n---\nNumber check: all {nc['checked']} numbers in the brief were found in sources read this run.\n"
     else:
         check = ""
+    fails = failed_sources(result)
+    check += ("\n**Sources that failed this run:**\n" + "\n".join(f"- {f}" for f in fails) + "\n") if fails else \
+        "\nNo source failed this run.\n"
     foot = (f"\n_Stopped by: {result.stop_reason} · steps: {result.steps} · "
             f"estimated cost: ${result.cost_usd:.4f} ({cfg.provider} {cfg.model})_\n")
     return head + body + check + foot
