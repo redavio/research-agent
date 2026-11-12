@@ -24,7 +24,7 @@ It only reads and reports. It cannot post, email, buy, or change anything.
 pipx install git+https://github.com/scottkaplan41510/research-agent
 ```
 
-Not published yet, so that line does not work today. From a local copy:
+Or from a local copy:
 
 ```bash
 python3.11 -m venv .venv
