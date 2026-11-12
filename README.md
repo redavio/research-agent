@@ -10,7 +10,7 @@ It only reads and reports. It cannot post, email, buy, or change anything.
 |---|------|------------------------|
 | 1 | **Goal, not a script** | The run starts from a goal in `config.yaml` (or `--goal`). There is no list of steps anywhere in the code. |
 | 2 | **Tools** | The model calls 9 tools: `list_sources`, `fetch_source`, `search_hackernews`, `fetch_url`, `read_item`, `recall_findings`, `save_finding`, `finish`, `finish_nothing` (`tools.py`). |
-| 3 | **It chooses** | Each turn the model picks the next tool. The loop in `agent.py` just runs what it picked. Two runs with the same config took different paths (see the run logs). |
+| 3 | **It chooses** | Each turn the model picks the next tool. The loop in `agent.py` just runs what it picked. Two runs with the same config can take different paths; each run's log in `runs/` shows the one it took. |
 | 4 | **It reacts** | Every tool result goes back into the conversation before the model's next turn. |
 | 5 | **It stops itself** | The run ends when the model calls `finish` or `finish_nothing`. Code only enforces a max step count and a max estimated cost. |
 | 6 | **It can say "nothing"** | `finish_nothing(reason)` is a normal ending, and the prompt tells it that is a good result when true. |
@@ -21,7 +21,7 @@ It only reads and reports. It cannot post, email, buy, or change anything.
 ## Install
 
 ```bash
-pipx install git+https://github.com/scottkaplan41510/research-agent
+pipx install git+https://github.com/redavio/research-agent
 ```
 
 Or from a local copy:
@@ -69,9 +69,15 @@ It prints each tool the model chose as it goes, then the brief. Each run saves t
 
 Memory lives in `research_memory.sqlite`. A story reported before is not saved twice: its sighting count goes up instead, so things that keep coming back stand out. Competitor pages are hashed, so the agent can tell "changed" from "unchanged" from "first time seen".
 
+## Where your data goes
+
+- Your config and what the agent reads go only to the AI provider you choose (OpenAI or Anthropic).
+- It reads the public sources you list and any public page it decides to open, searches Hacker News through Algolia, and calls Reddit and YouTube if you list those sources.
+- Run logs, briefs and memory stay on your machine. Nothing is sent to Redavio.
+
 ## Cost
 
-With `gpt-4.1-mini` and the example config, a full run took 15 to 21 steps and cost about $0.04 to $0.07. A narrow goal that ended in "nothing to report" took 4 steps and cost under $0.01. The hard cap defaults to $0.40 a run (`limits.max_cost_usd`). Costs are estimates from token counts and the price table in `llm.py`.
+With `gpt-4.1-mini` and the example config, a full run took 15 to 21 steps and cost about $0.04 to $0.07. A narrow goal that ended in "nothing to report" took 4 steps and cost under $0.01. With Anthropic's `claude-haiku-4-5` a full run costs more, about $0.10 to $0.20. The hard cap defaults to $0.40 a run (`limits.max_cost_usd`). Costs are estimates from token counts and the price table in `llm.py`.
 
 ## Tests
 
@@ -89,6 +95,7 @@ Tests use a scripted fake model and fake sources, so they need no network or key
 - Some sites block bots (the example's third competitor does, on purpose, to show the failure path). Pages that need JavaScript return little text.
 - Reddit needs free API credentials. Without them the source returns a clear error and the run carries on.
 - YouTube transcripts are best effort; without them the agent sees the video description.
+- Pages it reads can contain text written to steer an AI. It can only read and save notes, so the worst case is a misleading brief. Check the sources it cites.
 - No web search tool. The agent reads your sources, searches Hacker News, and follows links it finds.
 
 ## License
