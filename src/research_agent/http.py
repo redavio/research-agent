@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import ipaddress
 import re
+import socket
 from html import unescape
 from html.parser import HTMLParser
 
@@ -16,10 +18,30 @@ class FetchError(Exception):
     pass
 
 
+def _public_host(host: str) -> bool:
+    """True only when every address the host resolves to is on the public internet."""
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except (socket.gaierror, UnicodeError):
+        return False
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0])
+        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast or ip.is_unspecified:
+            return False
+    return True
+
+
+def _guard(request: httpx.Request) -> None:
+    # Runs on the first request and on every redirect, so a public page can't bounce the agent
+    # onto a private address (matters when the agent runs on a server with visitor-typed URLs).
+    if request.url.scheme not in ("http", "https") or not _public_host(request.url.host):
+        raise FetchError(f"Not fetching {request.url}: only public web addresses are allowed")
+
+
 def get(url: str, headers: dict | None = None, timeout: float = TIMEOUT) -> httpx.Response:
     try:
-        resp = httpx.get(url, headers={"User-Agent": USER_AGENT, **(headers or {})},
-                         timeout=timeout, follow_redirects=True)
+        with httpx.Client(follow_redirects=True, timeout=timeout, event_hooks={"request": [_guard]}) as client:
+            resp = client.get(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
     except httpx.HTTPError as e:
         raise FetchError(f"{type(e).__name__} fetching {url}: {e}") from e
     if resp.status_code >= 400:
