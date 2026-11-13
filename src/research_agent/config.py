@@ -9,7 +9,7 @@ from pathlib import Path
 
 import yaml
 
-SOURCE_TYPES = {"rss", "web", "youtube", "hackernews", "reddit"}
+SOURCE_TYPES = {"rss", "web", "youtube", "reddit"}
 DEFAULT_GOAL = "Find what changed in my market this week that matters to me."
 
 
@@ -68,9 +68,7 @@ def parse_config(data: dict, base_dir: Path = Path("."), env: dict | None = None
     def add(src: dict) -> None:
         if src.get("type") not in SOURCE_TYPES:
             raise ConfigError(f"source {src} has unknown type; use one of {sorted(SOURCE_TYPES)}")
-        if src["type"] == "hackernews" and not src.get("query"):
-            raise ConfigError(f"hackernews source needs a query: {src}")
-        if src["type"] != "hackernews" and not src.get("url"):
+        if not src.get("url"):
             raise ConfigError(f"{src['type']} source needs a url: {src}")
         sid = src.get("id") or f"{src['type']}-{len(sources) + 1}"
         if sid in seen_ids:

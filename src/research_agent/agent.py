@@ -156,7 +156,7 @@ def failed_sources(result: RunResult) -> list[str]:
     out = []
     for e in result.log:
         for c in e["calls"]:
-            if (not c["ok"] and c["tool"] in {"fetch_source", "fetch_url", "search_hackernews"}
+            if (not c["ok"] and c["tool"] in {"fetch_source", "fetch_url"}
                     and "no source with id" not in c["result_preview"]  # a wrong id is a model slip, not a broken source
                     and "already failed" not in c["result_preview"]):
                 target = next(iter((c["args"] or {}).values()), "?")

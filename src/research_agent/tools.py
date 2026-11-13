@@ -19,7 +19,7 @@ from .config import Config
 from .http import FetchError, html_to_text
 from . import http
 from .memory import Memory, normalize_url
-from .sources import FETCHERS, search_hackernews
+from .sources import FETCHERS
 
 SNIPPET = 280
 
@@ -31,14 +31,11 @@ TOOL_SPECS: list[dict] = [
      "description": "Fetch one configured source by id. Returns a list of items (id, title, url, date, short snippet). "
                     "Items older than the lookback window are dropped. Web pages report whether they changed since the last run.",
      "parameters": {"type": "object", "properties": {"source_id": {"type": "string"}}, "required": ["source_id"]}},
-    {"name": "search_hackernews",
-     "description": "Search recent Hacker News stories for a query. Good for spotting what people are talking about.",
-     "parameters": {"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"]}},
     {"name": "fetch_url",
      "description": "Fetch any public web page by URL and return it as a readable item (for following a link you saw).",
      "parameters": {"type": "object", "properties": {"url": {"type": "string"}}, "required": ["url"]}},
     {"name": "read_item",
-     "description": "Read the full text of an item returned by fetch_source, search_hackernews or fetch_url.",
+     "description": "Read the full text of an item returned by fetch_source or fetch_url.",
      "parameters": {"type": "object", "properties": {"item_id": {"type": "string"}}, "required": ["item_id"]}},
     {"name": "recall_findings",
      "description": "What earlier runs already reported (with how many times each was seen). Use it to avoid repeating old news.",
@@ -74,14 +71,12 @@ def _norm_text(s: str) -> str:
 class Toolbox:
     def __init__(self, config: Config, memory: Memory, run_id: str,
                  fetchers: dict[str, Callable] | None = None,
-                 hn_search: Callable | None = None,
                  url_fetcher: Callable | None = None,
                  now: datetime | None = None) -> None:
         self.cfg = config
         self.memory = memory
         self.run_id = run_id
         self.fetchers = fetchers or FETCHERS
-        self.hn_search = hn_search or search_hackernews
         self.url_fetcher = url_fetcher or _fetch_url
         self.now = now or datetime.now(timezone.utc)
         self.items: dict[str, dict] = {}
@@ -91,7 +86,7 @@ class Toolbox:
         self._failed_calls: set[str] = set()
         self._handlers = {
             "list_sources": self.list_sources, "fetch_source": self.fetch_source,
-            "search_hackernews": self.search_hackernews, "fetch_url": self.fetch_url,
+            "fetch_url": self.fetch_url,
             "read_item": self.read_item, "recall_findings": self.recall_findings,
             "save_finding": self.save_finding, "finish": self.finish, "finish_nothing": self.finish_nothing,
         }
@@ -171,10 +166,6 @@ class Toolbox:
             out["note"] = f"No items in the last {self.cfg.lookback_days} days."
         return out
 
-    def search_hackernews(self, query: str) -> dict:
-        items = self._register("hn", self.hn_search(query))
-        return {"query": query, "items": items, "older_items_dropped": self._dropped_old}
-
     def fetch_url(self, url: str) -> dict:
         if not re.match(r"^https?://", url):
             return {"error": "url must start with http:// or https://"}
@@ -187,7 +178,7 @@ class Toolbox:
     def read_item(self, item_id: str) -> dict:
         it = self.items.get(item_id)
         if it is None:
-            return {"error": f"no item '{item_id}' this run. Item ids come from fetch_source, search_hackernews or fetch_url."}
+            return {"error": f"no item '{item_id}' this run. Item ids come from fetch_source or fetch_url."}
         return {"item_id": item_id, "title": it.get("title"), "url": it.get("url"),
                 "published": it.get("published"), "text": it.get("text")}
 

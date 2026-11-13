@@ -115,7 +115,7 @@ def test_brief_with_made_up_number_is_flagged(cfg, memory):
 
 def test_no_tool_can_act_on_the_outside_world():
     names = {t["name"] for t in TOOL_SPECS}
-    assert names == {"list_sources", "fetch_source", "search_hackernews", "fetch_url", "read_item",
+    assert names == {"list_sources", "fetch_source", "fetch_url", "read_item",
                      "recall_findings", "save_finding", "finish", "finish_nothing"}
 
 

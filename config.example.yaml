@@ -17,7 +17,7 @@ competitors:
   - name: Jobber
     urls: ["https://getjobber.com/pricing/"]   # this site blocks bots; the agent sees the error and moves on
 
-# Where to look. Types: rss | web | youtube | hackernews | reddit
+# Where to look. Types: rss | web | youtube | reddit
 sources:
   - id: achr-news
     type: rss
@@ -27,9 +27,6 @@ sources:
     type: rss
     url: "https://www.fieldservicenews.com/feed"
     note: "Field service industry news"
-  - id: hn-field-service
-    type: hackernews
-    query: "field service software"
   - id: r-hvac
     type: reddit
     url: "https://www.reddit.com/r/HVAC"

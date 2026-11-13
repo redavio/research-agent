@@ -65,11 +65,11 @@ def fake_fetchers(fail: set[str] | None = None):
             raise FetchError("HTTP 403 from https://acme.example.com/pricing")
         return [dict(i) for i in PRICING_PAGE]
 
-    def hn(src):
+    def empty(src):
         return []
 
     from research_agent.sources import fetch_reddit
-    return {"rss": rss, "web": web, "hackernews": hn, "youtube": hn, "reddit": fetch_reddit}
+    return {"rss": rss, "web": web, "youtube": empty, "reddit": fetch_reddit}
 
 
 BASE_CONFIG = {
@@ -78,7 +78,6 @@ BASE_CONFIG = {
     "competitors": [{"name": "Acme", "urls": ["https://acme.example.com/pricing"]}],
     "sources": [
         {"id": "news", "type": "rss", "url": "https://news.example.com/feed"},
-        {"id": "hn", "type": "hackernews", "query": "field service"},
         {"id": "reddit", "type": "reddit", "url": "https://www.reddit.com/r/example"},
     ],
     "limits": {"max_steps": 12, "max_cost_usd": 1.0},
@@ -103,4 +102,4 @@ def memory():
 
 def make_toolbox(cfg, memory, run_id="run1", fail=None):
     return Toolbox(cfg, memory, run_id, fetchers=fake_fetchers(fail),
-                   hn_search=lambda q: [], url_fetcher=lambda u: [{"title": u, "url": u, "published": None, "text": "page"}])
+                   url_fetcher=lambda u: [{"title": u, "url": u, "published": None, "text": "page"}])

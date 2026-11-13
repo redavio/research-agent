@@ -46,7 +46,7 @@ def test_env_overrides_provider_and_model(tmp_path):
 @pytest.mark.parametrize("bad", [
     {**BASE_CONFIG, "business": {"to": "x"}},
     {**BASE_CONFIG, "sources": [{"type": "fax", "url": "x"}]},
-    {**BASE_CONFIG, "sources": [{"type": "hackernews"}]},
+    {**BASE_CONFIG, "sources": [{"type": "web"}]},
 ])
 def test_bad_config_is_rejected(bad, tmp_path):
     with pytest.raises(ConfigError):

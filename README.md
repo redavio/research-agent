@@ -9,7 +9,7 @@ It only reads and reports. It cannot post, email, buy, or change anything.
 | # | Test | How this repo meets it |
 |---|------|------------------------|
 | 1 | **Goal, not a script** | The run starts from a goal in `config.yaml` (or `--goal`). There is no list of steps anywhere in the code. |
-| 2 | **Tools** | The model calls 9 tools: `list_sources`, `fetch_source`, `search_hackernews`, `fetch_url`, `read_item`, `recall_findings`, `save_finding`, `finish`, `finish_nothing` (`tools.py`). |
+| 2 | **Tools** | The model calls 8 tools: `list_sources`, `fetch_source`, `fetch_url`, `read_item`, `recall_findings`, `save_finding`, `finish`, `finish_nothing` (`tools.py`). |
 | 3 | **It chooses** | Each turn the model picks the next tool. The loop in `agent.py` just runs what it picked. Two runs with the same config can take different paths; each run's log in `runs/` shows the one it took. |
 | 4 | **It reacts** | Every tool result goes back into the conversation before the model's next turn. |
 | 5 | **It stops itself** | The run ends when the model calls `finish` or `finish_nothing`. Code only enforces a max step count and a max estimated cost. |
@@ -37,7 +37,7 @@ python3.11 -m venv .venv
 cp config.example.yaml config.yaml
 ```
 
-Edit `config.yaml`: what you sell and to whom, competitors (name and URLs), sources, what you care about, what to ignore, and the caps. Source types: `rss`, `web`, `youtube`, `hackernews`, `reddit`. The example is a made-up field service software company.
+Edit `config.yaml`: what you sell and to whom, competitors (name and URLs), sources, what you care about, what to ignore, and the caps. Source types: `rss`, `web`, `youtube`, `reddit`. The example is a made-up field service software company.
 
 Put API keys in the environment or a `.env` file next to where you run it (both are git-ignored):
 
@@ -72,7 +72,7 @@ Memory lives in `research_memory.sqlite`. A story reported before is not saved t
 ## Where your data goes
 
 - Your config and what the agent reads go only to the AI provider you choose (OpenAI or Anthropic).
-- It reads the public sources you list and any public page it decides to open, searches Hacker News through Algolia, and calls Reddit and YouTube if you list those sources.
+- It reads the public sources you list and any public page it decides to open, and calls Reddit and YouTube if you list those sources.
 - Run logs, briefs and memory stay on your machine. Nothing is sent to Redavio.
 
 ## Cost
@@ -96,7 +96,7 @@ Tests use a scripted fake model and fake sources, so they need no network or key
 - Reddit needs free API credentials. Without them the source returns a clear error and the run carries on.
 - YouTube transcripts are best effort; without them the agent sees the video description.
 - Pages it reads can contain text written to steer an AI. It can only read and save notes, so the worst case is a misleading brief. Check the sources it cites.
-- No web search tool. The agent reads your sources, searches Hacker News, and follows links it finds.
+- No web search tool. The agent reads your sources and follows links it finds.
 
 ## License
 

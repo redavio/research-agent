@@ -62,40 +62,6 @@ def fetch_web(src: dict) -> list[dict]:
              "published": None, "text": text[:MAX_TEXT]}]
 
 
-HN_API = "https://hn.algolia.com/api/v1/search_by_date"
-
-
-def search_hackernews(query: str, min_points: int = 5, hits: int = 20) -> list[dict]:
-    qs = urlencode({"query": query, "tags": "story", "numericFilters": f"points>{min_points}",
-                    "hitsPerPage": hits})
-    resp = http.get(f"{HN_API}?{qs}")
-    try:
-        data = resp.json()
-    except ValueError as e:
-        raise FetchError(f"Hacker News returned non-JSON: {e}") from e
-    items = []
-    for h in data.get("hits", []):
-        oid = h.get("objectID")
-        title = h.get("title") or h.get("story_title") or ""
-        if not title:
-            continue
-        _, body = http.html_to_text(h.get("story_text") or "")
-        ts = h.get("created_at_i")
-        items.append({
-            "title": title,
-            "url": h.get("url") or f"https://news.ycombinator.com/item?id={oid}",
-            "aliases": [f"https://news.ycombinator.com/item?id={oid}"],
-            "published": datetime.fromtimestamp(ts, tz=timezone.utc).isoformat() if ts else None,
-            "text": (f"{title}\n\nHacker News discussion https://news.ycombinator.com/item?id={oid}: "
-                     f"{h.get('points') or 0} points, {h.get('num_comments') or 0} comments.\n\n{body}")[:MAX_TEXT],
-        })
-    return items
-
-
-def fetch_hackernews(src: dict) -> list[dict]:
-    return search_hackernews(src["query"])
-
-
 YT_FEED = "https://www.youtube.com/feeds/videos.xml?channel_id={cid}"
 
 
@@ -179,6 +145,5 @@ FETCHERS = {
     "rss": fetch_rss,
     "web": fetch_web,
     "youtube": fetch_youtube,
-    "hackernews": fetch_hackernews,
     "reddit": fetch_reddit,
 }
