@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import html
 import re
 import sys
 from datetime import datetime, timezone
@@ -44,7 +45,14 @@ def call_summary(call: dict) -> str:
     args = call.get("args") or {}
     if call["tool"] == "read_item":
         found = re.search(r'"title":\s*"((?:[^"\\]|\\.)*)"', call.get("result_preview") or "")
-        return found.group(1)[:120] if found else str(args.get("item_id", ""))
+        if not found:
+            return str(args.get("item_id", ""))
+        # The title comes from JSON in the preview: undo its escapes and any HTML entities in it.
+        try:
+            title = json.loads(f'"{found.group(1)}"')
+        except ValueError:
+            title = found.group(1)
+        return html.unescape(title)[:120]
     for key in ("source_id", "url", "query", "title"):
         if args.get(key):
             return str(args[key])[:120]

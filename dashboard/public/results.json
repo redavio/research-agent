@@ -190,7 +190,7 @@
       "calls": [
         {
           "tool": "read_item",
-          "arg": "Win the holiday shopping season with November\u2019s Demand Gen Drop.",
+          "arg": "Win the holiday shopping season with November’s Demand Gen Drop.",
           "ok": true
         }
       ]
@@ -200,7 +200,7 @@
       "calls": [
         {
           "tool": "read_item",
-          "arg": "California sues OpenAI over escaped agents as Google&#x27;s AI Mode cuts clicks",
+          "arg": "California sues OpenAI over escaped agents as Google's AI Mode cuts clicks",
           "ok": true
         }
       ]
