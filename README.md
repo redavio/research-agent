@@ -37,7 +37,7 @@ python3.11 -m venv .venv
 cp config.example.yaml config.yaml
 ```
 
-Edit `config.yaml`: what you sell and to whom, competitors (name and URLs), sources, what you care about, what to ignore, and the caps. Source types: `rss`, `web`, `youtube`, `reddit`. The example is a made-up field service software company.
+Edit `config.yaml`: what you sell and to whom, competitors (name and URLs), sources, what you care about, what to ignore, and the caps. Source types: `rss`, `web`, `youtube`, `reddit`. The example is a made-up B2B SaaS marketing analytics company.
 
 Put API keys in the environment or a `.env` file next to where you run it (both are git-ignored):
 

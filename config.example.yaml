@@ -5,45 +5,44 @@
 goal: "Find what changed in my market this week that matters to me."
 
 business:
-  name: "Fieldline (fictional example)"
-  sells: "Scheduling, dispatch and invoicing software for field service businesses."
-  to: "Small and mid-size HVAC, plumbing and electrical contractors in North America."
+  name: "Brightline (fictional example)"
+  sells: "Marketing analytics software that shows which campaigns create pipeline."
+  to: "Performance marketing and demand gen teams at B2B SaaS companies."
 
 competitors:
-  - name: ServiceTitan
-    urls: ["https://www.servicetitan.com/pricing"]
-  - name: Housecall Pro
-    urls: ["https://www.housecallpro.com/pricing/"]
-  - name: Jobber
-    urls: ["https://getjobber.com/pricing/"]   # this site blocks bots; the agent sees the error and moves on
+  - name: Optmyzr
+    urls: ["https://www.optmyzr.com/pricing/"]
+  - name: Supermetrics
+    urls: ["https://supermetrics.com/pricing"]
 
 # Where to look. Types: rss | web | youtube | reddit
 sources:
-  - id: achr-news
+  - id: search-engine-roundtable
     type: rss
-    url: "https://www.achrnews.com/rss/articles"
-    note: "HVAC trade news"
-  - id: field-service-news
+    url: "https://www.seroundtable.com/index.xml"
+    note: "Daily Google and Microsoft search and ads news"
+  - id: ppc-land
     type: rss
-    url: "https://www.fieldservicenews.com/feed"
-    note: "Field service industry news"
-  - id: r-hvac
+    url: "https://ppc.land/rss/"
+    note: "Paid media news"
+  - id: google-ads-blog
+    type: rss
+    url: "https://blog.google/products/ads-commerce/rss/"
+    note: "Google's own ads announcements"
+  - id: r-ppc
     type: reddit
-    url: "https://www.reddit.com/r/HVAC"
+    url: "https://www.reddit.com/r/PPC"
     note: "Needs REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET; without them the agent gets a clear error"
-  - id: jobber-youtube
-    type: youtube
-    url: "https://www.youtube.com/@Jobber"
 
 care_about:
-  - competitor pricing or packaging changes
-  - new product launches or AI features from competitors
-  - regulation or refrigerant rules that change contractor workflows
-  - funding, acquisitions or layoffs in field service software
+  - Google Ads and Microsoft Advertising changes that affect B2B campaigns
+  - AI search and answer engines changing how B2B buyers find vendors
+  - LinkedIn Ads and B2B targeting changes
+  - competitor pricing, packaging or new AI features
 
 ignore:
-  - generic home-owner tips
-  - consumer product reviews
+  - local SEO and ecommerce-only tips
+  - opinion pieces with no new facts
   - stories older than the lookback window
 
 lookback_days: 7

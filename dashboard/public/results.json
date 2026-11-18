@@ -1,95 +1,105 @@
 {
   "tool": "Research Agent",
   "version": 1,
-  "run_id": "20261110T043035Z",
-  "ran_at": "2026-11-10T04:30:35+00:00",
+  "run_id": "20261118T215804Z",
+  "ran_at": "2026-11-18T21:58:04+00:00",
   "goal": "Find what changed in my market this week that matters to me.",
   "business": {
-    "name": "Fieldline (fictional example)",
-    "sells": "Scheduling, dispatch and invoicing software for field service businesses.",
-    "to": "Small and mid-size HVAC, plumbing and electrical contractors in North America."
+    "name": "Brightline (fictional example)",
+    "sells": "Marketing analytics software that shows which campaigns create pipeline.",
+    "to": "Performance marketing and demand gen teams at B2B SaaS companies."
   },
   "provider": "openai",
   "model": "gpt-4.1-mini",
   "kind": "brief",
   "stop_reason": "model_finished",
-  "steps": 21,
-  "cost_usd": 0.0659,
-  "brief": "This week, key changes and insights in the field service software and HVAC contractor market include:\n\n1. A Field Service News article emphasized the importance of dynamic product lifecycle pricing strategies that adjust as assets age, which is relevant for Fieldline to consider in its pricing and packaging to better compete and maximize margins. (https://www.fieldservicenews.com/product-lifecycle-pricing-adjusting-strategy-as-assets-age/)\n\n2. Another Field Service News article highlighted the strategic shift to composable headless commerce architectures in B2B, enabling more agile, modular pricing, configuration, and service models. This could influence Fieldline's product strategy and integration capabilities. (https://www.fieldservicenews.com/composable-headless-commerce-agile-b2b-platform-strategy/)\n\n3. ACHR News reported DiversiTech adding a CO shutoff switch to its HVAC safety portfolio, which may impact contractor workflows and safety standards, an area where Fieldline could support through software updates. (https://www.achrnews.com/articles/166971-diversitech-adds-co-shutoff-switch-to-safety-portfolio)\n\n4. Competitor pricing and packaging for ServiceTitan and Housecall Pro remain stable this week, providing a consistent competitive landscape for Fieldline's pricing strategy. (https://www.servicetitan.com/pricing, https://www.housecallpro.com/pricing/)\n\nNo new refrigerant regulations or major layoffs/funding news were found in the last week.\n\nFieldline should consider reviewing its pricing strategy to incorporate lifecycle-based dynamic pricing, explore modular product architecture for agility, and monitor safety product impacts on contractor workflows.",
+  "steps": 25,
+  "cost_usd": 0.0857,
+  "brief": "This week in the B2B marketing analytics and advertising space, several key changes emerged:\n\n1. Microsoft Advertising announced its biggest upgrade to bidding models in a decade, promising better results for advertisers, which could impact how Brightline's customers optimize campaigns.\n\n2. Google Ads added Channel Prioritization and Promo Mode features to the Performance Max campaign setup, enhancing control over campaign channel focus and promotional messaging.\n\n3. Google updated AI Overviews on Search with fully visible citation blocks, improving transparency in AI-generated search summaries, relevant for how B2B buyers find vendors.\n\n4. Google released new help documents for AI Max for Search for Travel campaigns, indicating ongoing migration to AI-powered Search campaigns for Travel, which could affect related B2B marketing strategies.\n\n5. Competitor Optmyzr is running a pre-Black Friday deal offering up to 45% off first-year pricing, a notable competitive pricing move.\n\n6. Supermetrics pricing details show tiered plans with AI chat and campaign management features, highlighting the competitive landscape's focus on AI capabilities.\n\nBrightline should consider monitoring the impact of Microsoft and Google Ads bidding and campaign setup changes on its analytics offerings, and evaluate competitor pricing and AI feature trends to stay competitive.\n\nSources:\n- https://www.seroundtable.com/microsoft-advertising-bidding-models-update-42567.html\n- https://www.seroundtable.com/google-ads-pmax-setup-update-42561.html\n- https://www.seroundtable.com/google-ai-overviews-with-unfaded-citations-42563.html\n- https://www.seroundtable.com/google-ads-ai-max-for-search-for-travel-campaigns-docs-42564.html\n- https://www.optmyzr.com/pricing/\n- https://supermetrics.com/pricing",
   "number_check": {
-    "checked": 2,
+    "checked": 1,
     "verified": [
-      "1",
-      "403"
+      "45%"
     ],
     "unverified": []
   },
-  "failed_sources": [
-    "fetch_source competitor-jobber-1: HTTP 403 from https://getjobber.com/pricing/ (the site refused or the page is gone)"
-  ],
+  "failed_sources": [],
   "findings": [
     {
       "status": "new",
-      "finding_id": 2,
-      "title": "Field Service News article on Product Lifecycle Pricing strategy",
-      "why_it_matters": "This article highlights the importance of dynamic pricing strategies that adjust over the lifecycle of assets, which is relevant for Fieldline to consider in its pricing and packaging to better compete and maximize margins.",
+      "finding_id": 1,
+      "title": "Microsoft Advertising announces biggest upgrade to bidding models in a decade",
+      "why_it_matters": "This upgrade could significantly improve bidding performance for B2B campaigns on Microsoft Advertising, impacting how Brightline's customers optimize their ad spend and campaign results.",
       "source_urls": [
-        "https://www.fieldservicenews.com/product-lifecycle-pricing-adjusting-strategy-as-assets-age/"
+        "https://www.seroundtable.com/microsoft-advertising-bidding-models-update-42567.html"
       ],
-      "first_seen_at": "2026-11-10T04:30:45+00:00",
-      "last_seen_at": "2026-11-10T04:30:45+00:00",
+      "first_seen_at": "2026-11-18T21:58:26+00:00",
+      "last_seen_at": "2026-11-18T21:58:26+00:00",
+      "sightings": 1,
+      "note": "Saved."
+    },
+    {
+      "status": "new",
+      "finding_id": 2,
+      "title": "Google Ads adds Channel Prioritization and Promo Mode to Performance Max campaign setup",
+      "why_it_matters": "These new features in the Performance Max setup screen allow better control over channel focus and promotional messaging, which can help Brightline's B2B SaaS customers optimize their campaign strategies and attribution.",
+      "source_urls": [
+        "https://www.seroundtable.com/google-ads-pmax-setup-update-42561.html"
+      ],
+      "first_seen_at": "2026-11-18T21:58:29+00:00",
+      "last_seen_at": "2026-11-18T21:58:29+00:00",
       "sightings": 1,
       "note": "Saved."
     },
     {
       "status": "new",
       "finding_id": 3,
-      "title": "Field Service News article on Composable Headless Commerce for B2B",
-      "why_it_matters": "This article discusses how composable headless commerce architectures enable agile, modular pricing, configuration, and service models, which could influence Fieldline's product strategy and integration capabilities.",
+      "title": "Google updates AI Overviews on Search with fully visible citation blocks",
+      "why_it_matters": "This change improves transparency and trust in AI-generated search summaries, which affects how B2B buyers find and evaluate vendor information through Google Search, relevant for Brightline's marketing analytics insights.",
       "source_urls": [
-        "https://www.fieldservicenews.com/composable-headless-commerce-agile-b2b-platform-strategy/"
+        "https://www.seroundtable.com/google-ai-overviews-with-unfaded-citations-42563.html"
       ],
-      "first_seen_at": "2026-11-10T04:30:47+00:00",
-      "last_seen_at": "2026-11-10T04:30:47+00:00",
+      "first_seen_at": "2026-11-18T21:58:32+00:00",
+      "last_seen_at": "2026-11-18T21:58:32+00:00",
       "sightings": 1,
       "note": "Saved."
     },
     {
       "status": "new",
       "finding_id": 4,
-      "title": "ACHR News on CO Shutoff Switch Added to HVAC Safety Portfolio",
-      "why_it_matters": "This new safety product addition by DiversiTech could impact HVAC contractors' workflows and safety standards, which Fieldline's software could support through updated job and equipment tracking features.",
+      "title": "Google Ads releases new help documents for AI Max for Search for Travel campaigns",
+      "why_it_matters": "This update signals Google's ongoing migration of Travel campaigns to new AI-powered Search campaigns, which could influence how B2B SaaS marketers in travel-related sectors plan and measure campaign performance.",
       "source_urls": [
-        "https://www.achrnews.com/articles/166971-diversitech-adds-co-shutoff-switch-to-safety-portfolio"
+        "https://www.seroundtable.com/google-ads-ai-max-for-search-for-travel-campaigns-docs-42564.html"
       ],
-      "first_seen_at": "2026-11-10T04:30:49+00:00",
-      "last_seen_at": "2026-11-10T04:30:49+00:00",
+      "first_seen_at": "2026-11-18T21:58:35+00:00",
+      "last_seen_at": "2026-11-18T21:58:35+00:00",
       "sightings": 1,
       "note": "Saved."
     },
     {
       "status": "new",
       "finding_id": 5,
-      "title": "ServiceTitan Pricing and Packaging Overview",
-      "why_it_matters": "ServiceTitan's pricing and packaging remain unchanged this week, confirming stable competitive pricing for Fieldline to benchmark against.",
+      "title": "Optmyzr offers pre-Black Friday deal with up to 45% off first year pricing",
+      "why_it_matters": "This pricing promotion from a key competitor could influence customer acquisition and retention dynamics in the marketing analytics software space, relevant for Brightline's competitive strategy.",
       "source_urls": [
-        "https://www.servicetitan.com/pricing"
+        "https://www.optmyzr.com/pricing/"
       ],
-      "first_seen_at": "2026-11-10T04:30:55+00:00",
-      "last_seen_at": "2026-11-10T04:30:55+00:00",
+      "first_seen_at": "2026-11-18T21:58:38+00:00",
+      "last_seen_at": "2026-11-18T21:58:38+00:00",
       "sightings": 1,
       "note": "Saved."
     },
     {
       "status": "new",
       "finding_id": 6,
-      "title": "Housecall Pro Pricing and Plans Overview",
-      "why_it_matters": "Housecall Pro's pricing and plan structure remain stable this week, providing a consistent competitive landscape for Fieldline's pricing strategy.",
+      "title": "Supermetrics pricing details reveal tiered plans with AI chat and campaign management features",
+      "why_it_matters": "Understanding competitor pricing and feature packaging helps Brightline position its offerings effectively against Supermetrics, especially with AI and campaign management capabilities becoming standard.",
       "source_urls": [
-        "https://www.housecallpro.com/pricing/"
+        "https://supermetrics.com/pricing"
       ],
-      "first_seen_at": "2026-11-10T04:30:57+00:00",
-      "last_seen_at": "2026-11-10T04:30:57+00:00",
+      "first_seen_at": "2026-11-18T21:58:43+00:00",
+      "last_seen_at": "2026-11-18T21:58:43+00:00",
       "sightings": 1,
       "note": "Saved."
     }
@@ -110,28 +120,28 @@
       "calls": [
         {
           "tool": "fetch_source",
-          "arg": "achr-news",
+          "arg": "search-engine-roundtable",
           "ok": true
         },
         {
           "tool": "fetch_source",
-          "arg": "field-service-news",
+          "arg": "ppc-land",
           "ok": true
         },
         {
           "tool": "fetch_source",
-          "arg": "competitor-servicetitan-1",
+          "arg": "google-ads-blog",
           "ok": true
         },
         {
           "tool": "fetch_source",
-          "arg": "competitor-housecall-pro-1",
+          "arg": "competitor-optmyzr-1",
           "ok": true
         },
         {
           "tool": "fetch_source",
-          "arg": "competitor-jobber-1",
-          "ok": false
+          "arg": "competitor-supermetrics-1",
+          "ok": true
         }
       ]
     },
@@ -140,7 +150,7 @@
       "calls": [
         {
           "tool": "read_item",
-          "arg": "2010s: The Rise and Fall of R-410A in the HVAC Industry",
+          "arg": "Microsoft Advertising Announces Biggest Upgrade To Bidding Models",
           "ok": true
         }
       ]
@@ -150,7 +160,7 @@
       "calls": [
         {
           "tool": "read_item",
-          "arg": "Product Lifecycle Pricing: Adjusting Strategy as Assets Age",
+          "arg": "Google Ads PMax Setup Now With Channel Prioritization & Promo Mode",
           "ok": true
         }
       ]
@@ -160,7 +170,7 @@
       "calls": [
         {
           "tool": "read_item",
-          "arg": "Composable Headless Commerce: Agile B2B Platform Strategy",
+          "arg": "Google AI Overviews With Unfaded Citation Block",
           "ok": true
         }
       ]
@@ -170,7 +180,7 @@
       "calls": [
         {
           "tool": "read_item",
-          "arg": "DiversiTech Adds CO Shutoff Switch to Safety Portfolio",
+          "arg": "Google Ads Releases Several AI Max For Search For Travel Campaigns Help Docs",
           "ok": true
         }
       ]
@@ -179,8 +189,8 @@
       "step": 7,
       "calls": [
         {
-          "tool": "recall_findings",
-          "arg": "pricing",
+          "tool": "read_item",
+          "arg": "Win the holiday shopping season with November\u2019s Demand Gen Drop.",
           "ok": true
         }
       ]
@@ -189,8 +199,8 @@
       "step": 8,
       "calls": [
         {
-          "tool": "save_finding",
-          "arg": "Field Service News article on Product Lifecycle Pricing strategy",
+          "tool": "read_item",
+          "arg": "California sues OpenAI over escaped agents as Google&#x27;s AI Mode cuts clicks",
           "ok": true
         }
       ]
@@ -199,8 +209,8 @@
       "step": 9,
       "calls": [
         {
-          "tool": "recall_findings",
-          "arg": "pricing",
+          "tool": "read_item",
+          "arg": "Google adds Oklahoma and Alabama to its ad privacy tools, now 24 states",
           "ok": true
         }
       ]
@@ -209,8 +219,8 @@
       "step": 10,
       "calls": [
         {
-          "tool": "save_finding",
-          "arg": "Field Service News article on Composable Headless Commerce for B2B",
+          "tool": "read_item",
+          "arg": "Optmyzr | Pricing & Plans",
           "ok": true
         }
       ]
@@ -219,8 +229,8 @@
       "step": 11,
       "calls": [
         {
-          "tool": "recall_findings",
-          "arg": "refrigerant",
+          "tool": "read_item",
+          "arg": "Supermetrics Pricing",
           "ok": true
         }
       ]
@@ -229,8 +239,8 @@
       "step": 12,
       "calls": [
         {
-          "tool": "save_finding",
-          "arg": "ACHR News on CO Shutoff Switch Added to HVAC Safety Portfolio",
+          "tool": "recall_findings",
+          "arg": "Microsoft Advertising bidding upgrade",
           "ok": true
         }
       ]
@@ -239,8 +249,8 @@
       "step": 13,
       "calls": [
         {
-          "tool": "recall_findings",
-          "arg": "ServiceTitan pricing",
+          "tool": "save_finding",
+          "arg": "Microsoft Advertising announces biggest upgrade to bidding models in a decade",
           "ok": true
         }
       ]
@@ -249,8 +259,8 @@
       "step": 14,
       "calls": [
         {
-          "tool": "read_item",
-          "arg": "ServiceTitan Pricing and Plans Cost Information",
+          "tool": "recall_findings",
+          "arg": "Google Ads Performance Max Channel Prioritization",
           "ok": true
         }
       ]
@@ -259,8 +269,8 @@
       "step": 15,
       "calls": [
         {
-          "tool": "recall_findings",
-          "arg": "Housecall Pro pricing",
+          "tool": "save_finding",
+          "arg": "Google Ads adds Channel Prioritization and Promo Mode to Performance Max campaign setup",
           "ok": true
         }
       ]
@@ -269,8 +279,8 @@
       "step": 16,
       "calls": [
         {
-          "tool": "read_item",
-          "arg": "Housecall Pro Pricing & Plans | From $59/mo \u2014 14-Day Free TrialNavigation",
+          "tool": "recall_findings",
+          "arg": "Google AI Overviews citation",
           "ok": true
         }
       ]
@@ -279,8 +289,8 @@
       "step": 17,
       "calls": [
         {
-          "tool": "recall_findings",
-          "arg": "Jobber pricing",
+          "tool": "save_finding",
+          "arg": "Google updates AI Overviews on Search with fully visible citation blocks",
           "ok": true
         }
       ]
@@ -289,8 +299,8 @@
       "step": 18,
       "calls": [
         {
-          "tool": "save_finding",
-          "arg": "ServiceTitan Pricing and Packaging Overview",
+          "tool": "recall_findings",
+          "arg": "Google Ads AI Max for Search Travel campaigns",
           "ok": true
         }
       ]
@@ -300,8 +310,8 @@
       "calls": [
         {
           "tool": "save_finding",
-          "arg": "Housecall Pro Pricing and Plans Overview",
-          "ok": false
+          "arg": "Google Ads releases new help documents for AI Max for Search for Travel campaigns",
+          "ok": true
         }
       ]
     },
@@ -309,14 +319,54 @@
       "step": 20,
       "calls": [
         {
-          "tool": "save_finding",
-          "arg": "Housecall Pro Pricing and Plans Overview",
+          "tool": "recall_findings",
+          "arg": "Optmyzr pricing",
           "ok": true
         }
       ]
     },
     {
       "step": 21,
+      "calls": [
+        {
+          "tool": "save_finding",
+          "arg": "Optmyzr offers pre-Black Friday deal with up to 45% off first year pricing",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "step": 22,
+      "calls": [
+        {
+          "tool": "recall_findings",
+          "arg": "Supermetrics pricing",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "step": 23,
+      "calls": [
+        {
+          "tool": "save_finding",
+          "arg": "Supermetrics pricing details reveal tiered plans with AI chat and campaign management features",
+          "ok": false
+        }
+      ]
+    },
+    {
+      "step": 24,
+      "calls": [
+        {
+          "tool": "save_finding",
+          "arg": "Supermetrics pricing details reveal tiered plans with AI chat and campaign management features",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "step": 25,
       "calls": [
         {
           "tool": "finish",
