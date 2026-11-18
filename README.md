@@ -66,8 +66,28 @@ It prints each tool the model chose as it goes, then the brief. Each run saves t
 
 - `<run>-brief.md`: the brief, the number check, and the list of sources that failed.
 - `<run>-log.json`: every step, every tool call the model chose, token counts and cost.
+- `<run>-results.json`: the run in the shape the dashboard reads (brief, findings, steps, number check, failed sources, cost).
 
 Memory lives in `research_memory.sqlite`. A story reported before is not saved twice: its sighting count goes up instead, so things that keep coming back stand out. Competitor pages are hashed, so the agent can tell "changed" from "unchanged" from "first time seen".
+
+## Dashboard
+
+A small React app that shows one run: the brief, the findings, and every step the agent chose. It only displays a run; the CLI does the running.
+
+```bash
+cd dashboard && npm install && cp ../runs/<run>-results.json public/results.json && npm run dev
+```
+
+It ships with a sample run in `public/results.json`. Open any other run with the "Open results file" button, or load one by address with `?src=<file>`. To share it with your team, deploy the `dashboard` folder to Vercel (or any static host) with your `results.json` in `public/`.
+
+## Make it yours
+
+Research Agent is a starting point, not a finished product. Fork it and change anything:
+
+- **Brand the dashboard.** It ships unbranded. Set your name and logo in `dashboard/src/brand.ts` and your colors at the top of `dashboard/src/style.css`.
+- **Change the screens or build your own app.** Everything on screen comes from one file, `results.json`. Build your own React app, internal tool or AI agent on it.
+- **Change what it watches.** Your business, competitors, sources, what to care about and what to ignore are in `config.yaml`; the caps are there too.
+- **Change how it works.** The prompt and loop are in `agent.py`, the tools in `tools.py`. Add a source type next to the others in `sources.py`.
 
 ## Where your data goes
 

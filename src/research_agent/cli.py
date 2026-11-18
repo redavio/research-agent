@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -35,6 +37,39 @@ def render_markdown(result: RunResult, cfg: Config) -> str:
     foot = (f"\n_Stopped by: {result.stop_reason} · steps: {result.steps} · "
             f"estimated cost: ${result.cost_usd:.4f} ({cfg.provider} {cfg.model})_\n")
     return head + body + check + foot
+
+
+def call_summary(call: dict) -> str:
+    """One readable line for a tool call: the source, finding title, or the headline of the item it read."""
+    args = call.get("args") or {}
+    if call["tool"] == "read_item":
+        found = re.search(r'"title":\s*"((?:[^"\\]|\\.)*)"', call.get("result_preview") or "")
+        return found.group(1)[:120] if found else str(args.get("item_id", ""))
+    for key in ("source_id", "url", "query", "title"):
+        if args.get(key):
+            return str(args[key])[:120]
+    return ""
+
+
+def to_results(result: RunResult, cfg: Config) -> dict:
+    """The run in the shape the dashboard reads (dashboard/public/results.json)."""
+    ran_at = datetime.strptime(result.run_id, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc).isoformat() \
+        if re.fullmatch(r"\d{8}T\d{6}Z", result.run_id) else None
+    return {
+        "tool": "Research Agent", "version": 1, "run_id": result.run_id, "ran_at": ran_at, "goal": cfg.goal,
+        "business": {k: cfg.business.get(k) for k in ("name", "sells", "to")},
+        "provider": cfg.provider, "model": cfg.model,
+        "kind": result.kind, "stop_reason": result.stop_reason, "steps": result.steps,
+        "cost_usd": round(result.cost_usd, 4),
+        "brief": result.text,
+        "number_check": result.number_check,
+        "failed_sources": failed_sources(result),
+        "findings": result.saved_findings,
+        "steps_taken": [
+            {"step": e["step"], "calls": [{"tool": c["tool"], "arg": call_summary(c), "ok": c["ok"]} for c in e["calls"]]}
+            for e in result.log if e.get("calls")
+        ],
+    }
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -72,11 +107,13 @@ def cmd_run(args: argparse.Namespace) -> int:
     cfg.output_dir.mkdir(parents=True, exist_ok=True)
     brief_path = cfg.output_dir / f"{run_id}-brief.md"
     log_path = cfg.output_dir / f"{run_id}-log.json"
+    results_path = cfg.output_dir / f"{run_id}-results.json"
     brief_path.write_text(md)
     log_path.write_text(to_json(result, cfg))
+    results_path.write_text(json.dumps(to_results(result, cfg), indent=2, default=str))
     print(md)
     print(f"tool order chosen by the model: {' -> '.join(tool_order(result))}", file=sys.stderr)
-    print(f"saved: {brief_path} and {log_path}", file=sys.stderr)
+    print(f"saved: {brief_path}, {log_path} and {results_path} (open it in the dashboard)", file=sys.stderr)
     return 0
 
 

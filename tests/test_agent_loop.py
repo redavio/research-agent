@@ -134,3 +134,15 @@ def test_llm_api_error_ends_run_cleanly(cfg, memory):
             raise RuntimeError("rate limited")
     r = run_agent(cfg, Broken(), make_toolbox(cfg, memory), "r")
     assert r.stop_reason == "llm_error" and r.kind == "capped" and "rate limited" in r.log[0]["llm_error"]
+
+
+def test_results_file_has_what_the_dashboard_reads(cfg, memory):
+    from research_agent.cli import to_results
+    llm = ScriptedLLM([[call("fetch_source", source_id="news")], *_finish_with_finding()])
+    r = run_agent(cfg, llm, make_toolbox(cfg, memory, "20261110T043035Z"), "20261110T043035Z")
+    out = json.loads(json.dumps(to_results(r, cfg), default=str))
+    assert out["kind"] == "brief" and out["brief"].startswith("Acme Pro")
+    assert out["ran_at"].startswith("2026-11-10T04:30:35")
+    assert [f["title"] for f in out["findings"]] == ["Acme raised Pro price"]
+    assert [c["tool"] for s in out["steps_taken"] for c in s["calls"]] == tool_order(r)
+    assert out["steps_taken"][0]["calls"][0]["arg"] == "news"
