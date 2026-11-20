@@ -35,6 +35,8 @@ class Config:
     price_per_mtok: dict | None = None
     output_dir: Path = Path("runs")
     memory_path: Path = Path("research_memory.sqlite")
+    # Optional: the app's own system prompt (same {placeholders} as agent.SYSTEM_PROMPT). None = built in.
+    system_prompt: str | None = None
     raw: dict = field(default_factory=dict)
 
 
@@ -116,6 +118,7 @@ def parse_config(data: dict, base_dir: Path = Path("."), env: dict | None = None
         price_per_mtok=llm.get("price_per_mtok"),
         output_dir=out_dir if out_dir.is_absolute() else base_dir / out_dir,
         memory_path=mem if mem.is_absolute() else base_dir / mem,
+        system_prompt=llm.get("system_prompt") or None,
         raw=data,
     )
 

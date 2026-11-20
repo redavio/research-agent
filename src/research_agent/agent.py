@@ -63,7 +63,7 @@ class RunResult:
 
 def build_system_prompt(cfg: Config, today: str) -> str:
     b = cfg.business
-    return SYSTEM_PROMPT.format(
+    return (cfg.system_prompt or SYSTEM_PROMPT).format(
         goal=cfg.goal, name=b.get("name", "(unnamed)"), sells=b.get("sells"), to=b.get("to"),
         competitors=", ".join(c["name"] for c in cfg.competitors) or "none listed",
         care="; ".join(cfg.care_about) or "anything material", ignore="; ".join(cfg.ignore) or "nothing specific",
